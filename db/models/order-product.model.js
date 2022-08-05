@@ -2,6 +2,7 @@ const { Model, DataTypes, Sequelize } = require('sequelize');
 
 const  { ORDER_TABLE } = require('./order.model');
 const  { PRODUCT_TABLE } = require('./product.model');
+
 const ORDER_PRODUCT_TABLE = 'orders_products';
 
 const OrderProductSchema = {
@@ -55,7 +56,7 @@ class OrderProduct extends Model {
     static config(sequelize){
         return {
             sequelize,
-            tableName: ORDER_TABLE,
+            tableName: ORDER_PRODUCT_TABLE,
             modelName: 'OrderProduct',
             timestamps: false,
         }

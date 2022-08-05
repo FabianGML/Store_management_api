@@ -107,12 +107,12 @@ module.exports = {
         },
         expiration: {
             allowNull: false,
-            type: Sequelize.DataTypes.DATE,
+            type: Sequelize.DataTypes.DATEONLY,
             defaultValue: Sequelize.NOW,
         },
         expiration2: {
             field: 'expiration_2',
-            type: Sequelize.DataTypes.DATE,
+            type: Sequelize.DataTypes.DATEONLY,
             allowNull: true,
         },
         userId: {
@@ -166,7 +166,7 @@ module.exports = {
         orderArrive:{
             field: 'order_arrive',
             allowNull: false,
-            type: Sequelize.DataTypes.DATE,
+            type: Sequelize.DataTypes.DATEONLY,
             defaultValue: Sequelize.NOW,  
         },
         total: {
@@ -360,15 +360,15 @@ module.exports = {
   },
 
   async down (queryInterface) {
-    await queryInterface.dropTable(USER_TABLE);
-    await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
-    await queryInterface.dropTable(SALE_PRODUCT_TABLE);
+      await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
+      await queryInterface.dropTable(SALE_PRODUCT_TABLE);
+      await queryInterface.dropTable(PRODUCT_PROVIDER_TABLE);
+      await queryInterface.dropTable(PRODUCT_TABLE);
+      await queryInterface.dropTable(SALE_TABLE);
+      await queryInterface.dropTable(USER_TABLE);
     await queryInterface.dropTable(ORDER_TABLE);
-    await queryInterface.dropTable(PRODUCT_PROVIDER_TABLE);
-    await queryInterface.dropTable(PRODUCT_TABLE);
     await queryInterface.dropTable(LAB_PROVIDER_TABLE);
     await queryInterface.dropTable(LAB_TABLE);
     await queryInterface.dropTable(PROVIDER_TABLE);
-    await queryInterface.dropTable(SALE_TABLE);
   }
 };

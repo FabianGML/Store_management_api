@@ -13,7 +13,7 @@ const OrderSchema = {
     orderArrive:{
         field: 'order_arrive',
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         defaultValue: Sequelize.NOW,  
     },
     total: {
@@ -40,6 +40,7 @@ const OrderSchema = {
 }
 
 class Order extends Model {
+
     static associate(models) {
         this.belongsToMany(models.Product, {
             as: 'items',
@@ -47,6 +48,8 @@ class Order extends Model {
             foreignKey : 'orderId',
             otherKey: 'productId'
         });
+
+        this.belongsTo(models.Provider, {as: 'provider'});
     }
 
     static config(sequelize){
