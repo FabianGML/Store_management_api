@@ -2,7 +2,7 @@ const express = require('express');
 
 const validatorHandler = require('./../middlewares/validator.handler');
 const OrderService = require('./../services/order.service');
-const { getOrderSchema, createOrderSchema, updateOrderSchema, addItemSchema, updateItemSchema  } = require('./../schemas/order.schema');
+const { getOrderSchema, getOrderProductSchema, createOrderSchema, updateOrderSchema, addItemSchema, updateItemSchema  } = require('./../schemas/order.schema');
 
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const service = new OrderService();
 router.get('/', 
     async (req, res, next) => {
         try {
-            const orders = await service.find()
+            const orders = await service.getOrders()
             res.json(orders)
         } catch (error) {
             next(error)
@@ -53,34 +53,35 @@ router.get('/',
         try {
             const { id } = req.params;
             const data = req.body;
-            const changes = await service.update(id, data);
+            const changes = await service.updateOrder(id, data);
             res.json(changes);
         } catch (error) {
             next(error);
         }
     }
 )
-.patch('/item/:id', 
-    validatorHandler(getOrderSchema, 'params'),
+
+.patch('/:id/:itemId', 
+    validatorHandler(getOrderProductSchema, 'params'),
     validatorHandler(updateItemSchema, 'body'),
     async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const body = req.body;
-            const changes = service.updateItem(id, body);
+            const { id, itemId } = req.params;
+            const data = req.body;
+            const changes = await service.updateItem(id, itemId, data)
             res.json(changes);
-            
         } catch (error) {
             next(error)
         }
     }
 )
-.delete('/:id', 
-    validatorHandler(getOrderSchema, 'params'),
+
+.delete('/:id/:itemId', 
+    validatorHandler(getOrderProductSchema, 'params'),
     async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const deletedOrder = await service.delete(id);
+            const { id, itemId } = req.params;
+            const deletedOrder = await service.deleteItem(id, itemId);
             res.json(deletedOrder);
         } catch (error) {
             next(error);

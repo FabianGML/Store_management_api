@@ -32,7 +32,7 @@ const ProductProviderSchema = {
 
 class ProductProvider extends Model {
     static associate(models){
-        //
+        this.belongsTo(models.Product, {as: 'product'})
     }
 
     static config(sequelize) {

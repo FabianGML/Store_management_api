@@ -17,9 +17,9 @@ router.get('/',
             next(error)
         }
     }
-);
+)
 
-router.get('/:id', 
+.get('/:id', 
     validatorHandler(getLabSchema, 'params'),
     async (req, res, next) => {
         try {
@@ -32,7 +32,7 @@ router.get('/:id',
     }
 )
 
-router.post('/',
+.post('/',
     validatorHandler(labSchema, 'body'),
     async (req, res, next) => {
         try {
@@ -44,9 +44,9 @@ router.post('/',
         }
         
     }
-);
+)
 
-router.patch('/:id', 
+.patch('/:id', 
     validatorHandler(getLabSchema, 'params'),
     validatorHandler(labSchema, 'body'),
     async (req, res, next) => {
@@ -59,9 +59,9 @@ router.patch('/:id',
             next(error);
         }
     }
-);
+)
 
-router.delete('/:id', 
+.delete('/:id', 
     validatorHandler(getLabSchema, 'params'),
     async (req, res, next) => {
         try {
@@ -72,6 +72,6 @@ router.delete('/:id',
             next(error);
         }
     }
-);
+)
 
 module.exports = router
