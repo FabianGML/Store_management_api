@@ -28,7 +28,7 @@ function setupModels(sequelize) {
     Product.associate(sequelize.models);
     OrderProduct.associate(sequelize.models);
     ProductProvider.associate(sequelize.models);
-
+    Sale.associate(sequelize.models);
 }
 
 module.exports = setupModels;

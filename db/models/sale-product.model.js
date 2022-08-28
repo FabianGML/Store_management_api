@@ -11,10 +11,6 @@ const SaleProductSchema = {
         autoIncrement: true,
         type: DataTypes.INTEGER
     },
-    amount: {
-        allowNull: false,
-        type: DataTypes.INTEGER
-    },
     saleId: {
         field: 'sale_id',
         allowNull: false,
@@ -41,7 +37,11 @@ const SaleProductSchema = {
         field: 'unit_price',
         type: DataTypes.DOUBLE,
     },
-    TotalUnit: {
+    amount: {
+        allowNull: false,
+        type: DataTypes.INTEGER
+    },
+    TotalUnit: {//name is wrong
         field: 'total_unit',
         type: DataTypes.DOUBLE,
     }

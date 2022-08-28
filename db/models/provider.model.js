@@ -41,6 +41,12 @@ class Provider extends Model {
             otherKey: 'labId'
         });
         
+        this.belongsToMany(models.Product, {
+            as: 'prodProv',
+            through: models.ProductProvider,
+            foreignKey: 'providerId',
+            otherKey: 'productId'
+        })
     }
 
     static config(sequelize){

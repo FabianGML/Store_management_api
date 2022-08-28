@@ -19,7 +19,9 @@ class LabService {
     }
 
     async findOne(id) {
-        const lab = await models.Lab.findByPk(id);
+        const lab = await models.Lab.findByPk(id, {
+            include: ['products']
+        });
         if (!lab) {
             throw boom.badRequest('El laboratorio no existe');
         }

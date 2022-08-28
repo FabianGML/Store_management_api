@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const id = Joi.number().positive().required();
+const providerId = Joi.number().positive().required();
 const labProviderId = Joi.number().positive().required();
 const name = Joi.string();
 const email = Joi.string().email();
@@ -12,12 +12,19 @@ const labs = Joi.array().items(Joi.object({
     labName
 }))
 
+/* product-provider Schema */
+const productId = Joi.number().positive().required();
+const prodProvId = Joi.number().positive();
+const productsProv = Joi.array().items(Joi.object({
+    productId
+}))
+
 const getProviderSchema = Joi.object({
-    id
+    providerId
 });
 
 const getLabProviderSchema = Joi.object({
-    id,
+    providerId,
     labProviderId
 })
 
@@ -41,4 +48,19 @@ const labsSchema = Joi.object({
     labs
 })
 
-module.exports = { getProviderSchema, getLabProviderSchema, createProviderSchema, updateProviderSchema, labsSchema }
+/* product-providder */
+
+const getProductProvSchema = Joi.object({
+    providerId,
+    prodProvId
+})
+
+const createProductProvSchema = Joi.object({
+    productsProv
+})
+
+const updateProductProvSchema = Joi.object({
+    productId
+})
+
+module.exports = { getProviderSchema, getLabProviderSchema, createProviderSchema, updateProviderSchema, labsSchema, getProductProvSchema, createProductProvSchema, updateProductProvSchema }

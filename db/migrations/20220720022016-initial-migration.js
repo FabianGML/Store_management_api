@@ -360,12 +360,12 @@ module.exports = {
   },
 
   async down (queryInterface) {
-      await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
-      await queryInterface.dropTable(SALE_PRODUCT_TABLE);
-      await queryInterface.dropTable(PRODUCT_PROVIDER_TABLE);
-      await queryInterface.dropTable(PRODUCT_TABLE);
-      await queryInterface.dropTable(SALE_TABLE);
-      await queryInterface.dropTable(USER_TABLE);
+    await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
+    await queryInterface.dropTable(SALE_PRODUCT_TABLE);
+    await queryInterface.dropTable(PRODUCT_PROVIDER_TABLE);
+    await queryInterface.dropTable(PRODUCT_TABLE);
+    await queryInterface.dropTable(SALE_TABLE);
+    await queryInterface.dropTable(USER_TABLE);
     await queryInterface.dropTable(ORDER_TABLE);
     await queryInterface.dropTable(LAB_PROVIDER_TABLE);
     await queryInterface.dropTable(LAB_TABLE);

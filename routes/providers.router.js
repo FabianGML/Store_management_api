@@ -2,7 +2,7 @@ const express = require('express');
 
 const validatorHandler = require('./../middlewares/validator.handler');
 const ProviderService = require('./../services/provider.service');
-const { getProviderSchema, getLabProviderSchema,  createProviderSchema, updateProviderSchema, labsSchema } = require('./../schemas/provider.schema');
+const { getProviderSchema, getLabProviderSchema,  createProviderSchema, updateProviderSchema, labsSchema, getProductProvSchema, createProductProvSchema, updateProductProvSchema  } = require('./../schemas/provider.schema');
 
 
 
@@ -21,12 +21,12 @@ router.get('/',
     }
 )
 
-.get('/:id', 
+.get('/:providerId', 
     validatorHandler(getProviderSchema, 'params'),
     async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const provider = await service.getOneProvider(id);
+            const { providerId } = req.params;
+            const provider = await service.getOneProvider(providerId);
             res.json(provider);
         } catch (error) {
             next(error)
@@ -47,14 +47,14 @@ router.get('/',
     }
 )
 
-.patch('/:id', 
+.patch('/:providerId', 
     validatorHandler(getProviderSchema, 'params'),
     validatorHandler(updateProviderSchema, 'body'),
     async (req, res, next) => {
         try {
-            const { id } = req.params;
+            const { providerId } = req.params;
             const data = req.body;
-            const changes = await service.update(id, data);
+            const changes = await service.update(providerId, data);
             res.json(changes);
         } catch (error) {
             next(error);
@@ -62,12 +62,12 @@ router.get('/',
     }
 )
 
-.delete('/:id', 
+.delete('/:providerId', 
     validatorHandler(getProviderSchema, 'params'),
     async (req, res, next) => {
         try {
-            const { id } = req.params;
-            const deletedProvider = await service.delete(id);
+            const { providerId } = req.params;
+            const deletedProvider = await service.delete(providerId);
             res.json(deletedProvider);
         } catch (error) {
             next(error);
@@ -76,14 +76,14 @@ router.get('/',
 )
 
 /* Labs Provider router */
-.post('/:id',
+.post('/:providerId',
     validatorHandler(getProviderSchema, 'params'),
     validatorHandler(labsSchema, 'body'),
     async (req, res, next) => {
         try {
-            const { id } = req.params;
+            const { providerId } = req.params;
             const data = req.body;
-            const addLab = await service.addLab(data, id)
+            const addLab = await service.addLab(data, providerId)
             res.status(201).json(addLab)
         } catch (error) {
             next(error)
@@ -91,14 +91,14 @@ router.get('/',
     }
 )
 
-.patch('/:id/:labProviderId', 
+.patch('/:providerId/:labProviderId', 
     validatorHandler(getLabProviderSchema, 'params'),
     validatorHandler(labsSchema, 'body'),
     async (req, res, next) => {
         try {
-            const { id, labProviderId } = req.params;
+            const { providerId, labProviderId } = req.params;
             const data = req.body;
-            const deletedProvider = await service.updateLab(id, labProviderId, data);
+            const deletedProvider = await service.updateLab(providerId, labProviderId, data);
             res.json(deletedProvider);
         } catch (error) {
             next(error);
@@ -106,12 +106,12 @@ router.get('/',
     }
 )
 
-.delete('/:id/:labProviderId', 
+.delete('/:providerId/:labProviderId', 
     validatorHandler(getLabProviderSchema, 'params'),
     async (req, res, next) => {
         try {
-            const { id, labProviderId } = req.params;
-            const deletedProvider = await service.deleteLab(id, labProviderId);
+            const { providerId, labProviderId } = req.params;
+            const deletedProvider = await service.deleteLab(providerId, labProviderId);
             res.json(deletedProvider);
         } catch (error) {
             next(error);
@@ -119,5 +119,75 @@ router.get('/',
     }
 )
 
+/* Product-Provider Router */
+
+.get('/:providerId/auto-add',
+    validatorHandler(getProductProvSchema, 'params'),
+    async (req, res, next) => {
+        try {
+            const { providerId } = req.params;
+            const autoAdd = await service.autoAddProdProv(providerId);
+            res.json(autoAdd);
+        } catch (error) {
+            next(error)
+        }
+    }
+)
+
+.get('/:providerId/prod-prov',
+    validatorHandler(getProductProvSchema, 'params'),
+    async (req, res, next) => {
+        try {
+            const { providerId } = req.params;
+            const allProducts = await service.getAllProductsProv(providerId);
+            res.json(allProducts);
+        } catch (error) {
+            next(error)
+        }
+    }
+)
+
+.post('/:providerId/prod-prov', 
+    validatorHandler(getProductProvSchema, 'params'),
+    validatorHandler(createProductProvSchema, 'body'),
+    async(req,res,next) => {
+        try {
+            const { providerId } = req.params;
+            const data = req.body;
+            const newProduct = await service.addProdProv(providerId, data);
+            res.json(newProduct);
+        } catch (error) {
+            next(error)
+        }
+    }
+)
+
+.patch('/:providerId/prod-prov/:prodProvId', 
+    validatorHandler(getProductProvSchema, 'params'),
+    validatorHandler(updateProductProvSchema, 'body'),
+    async(req,res,next) => {
+        try {
+            const { providerId, prodProvId } = req.params;
+            const data = req.body;
+            const product = await service.updateProdProv(providerId, prodProvId, data);
+            res.json(product);
+        } catch (error) {
+            next(error)
+        }
+    }
+)
+
+.delete('/:providerId/prod-prov/:prodProvId', 
+    validatorHandler(getProductProvSchema, 'params'),
+    async(req,res,next) => {
+        try {
+            const { providerId, prodProvId } = req.params;
+            const product = await service.deleteProdProv(providerId, prodProvId);
+            res.json(product);
+        } catch (error) {
+            next(error)
+        }
+    }
+)
 
 module.exports = router

@@ -12,13 +12,6 @@ const expiration = Joi.date().format('DD-MM-YYYY').utc();
 const expiration2 = Joi.date().format('DD-MM-YYYY').utc();
 const userId = Joi.number().positive();
 
-/* product-provider Schema */
-const providerId = Joi.number().positive().required();
-const productId = Joi.number().positive().required();
-const prodProvId = Joi.number().positive();
-const productsProv = Joi.array().items(Joi.object({
-    productId
-}))
 
 
 const createProductSchema = Joi.object({
@@ -51,20 +44,4 @@ const updateProductSchema = Joi.object({
     expiration2,
 });
 
-/* product-providder */
-
-const getProductProvSchema = Joi.object({
-    providerId,
-    prodProvId
-})
-
-const createProductProvSchema = Joi.object({
-    productsProv
-})
-
-const updateProductProvSchema = Joi.object({
-    productId
-})
-
-
-module.exports = { createProductSchema, getProductSchema, updateProductSchema, getProductProvSchema, createProductProvSchema, updateProductProvSchema }
+module.exports = { createProductSchema, getProductSchema, updateProductSchema }

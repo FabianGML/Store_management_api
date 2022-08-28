@@ -1,9 +1,10 @@
-const { Model, DataTypes, Sequelize } = require('sequelize');
+const { date } = require('joi');
+const { Model, DataTypes, Sequelize, fn } = require('sequelize');
 
 const { USER_TABLE } = require('./user.model');
 const SALE_TABLE = 'sales';
 
-const SalesSchema = {
+const SaleSchema = {
     id: {
         allowNull: false,
         primaryKey: true,
@@ -13,11 +14,12 @@ const SalesSchema = {
     total: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0.1
     },
     saleDate: {
-        allowNull: false,
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
+        field: 'sale_date',
     },
     userId: {
         field: 'user_id',
@@ -32,7 +34,12 @@ const SalesSchema = {
 
 class Sale extends Model {
     static associate(models) {
-        //
+        this.belongsToMany(models.Product, {
+            as: 'products',
+            through: models.SaleProduct,
+            foreignKey: 'saleId',
+            otherKey: 'productId'
+        })
     }
 
     static config(sequelize){
@@ -45,4 +52,4 @@ class Sale extends Model {
     }
 }
 
-module.exports = { SALE_TABLE, SalesSchema, Sale };
+module.exports = { SALE_TABLE, SaleSchema, Sale };
