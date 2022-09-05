@@ -20,7 +20,7 @@ const createUserSchema = Joi.object({
     repeatPassword: repeatPassword.required(),
 })
 
-const updateNameUserSchema = Joi.object({
+const updateFullNameUserSchema = Joi.object({
     name,
     lastName
 })
@@ -40,4 +40,4 @@ const getUserSchema = Joi.object({
 })
 
 
-module.exports = { createUserSchema, updateNameUserSchema, changePrivateSchema, getUserSchema };
+module.exports = { createUserSchema, updateFullNameUserSchema, changePrivateSchema, getUserSchema };

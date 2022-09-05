@@ -1,38 +1,43 @@
 const express = require('express');
+const passport = require('passport')
 
 const validatorHandler = require('./../middlewares/validator.handler');
 const UserService = require('./../services/user.service');
-const { createUserSchema, updateNameUserSchema, changePrivateSchema, getUserSchema } = require('./../schemas/user.schema');
+const { createUserSchema, updateFullNameUserSchema, changePrivateSchema, getUserSchema } = require('./../schemas/user.schema');
+const { checkAdminRole } = require('./../middlewares/auth.handler');
 
 
 const router = express.Router();
 const service = new UserService();
 
+
 router.get('/', 
+    checkAdminRole,
     async (req, res, next) => {
     try {
-        const users = await service.find();
+        const users = await service.getAllUsers();
         res.json(users);
     } catch (error) {
         next(error)
     }   
     }
-);
+)
 
-router.get('/:id', 
+.get('/:id', 
     validatorHandler(getUserSchema, 'params'),
+    checkAdminRole,
     async (req, res, next) => {
         try {
             const { id } = req.params; 
-            const user = await service.findOne(id)
+            const user = await service.getOneUser(id)
             res.json(user);
         } catch (error) {
             next(error);
         }
     }
-);
+)
 
-router.post('/', 
+.post('/', 
     validatorHandler(createUserSchema, 'body'),
     async (req, res, next) => {
         try {
@@ -43,11 +48,11 @@ router.post('/',
             next(error);
         }
     }
-);
+)
 
-router.patch('/name/:id',
+.patch('/name/:id',
     validatorHandler(getUserSchema, 'params'),
-    validatorHandler(updateNameUserSchema, 'body'),
+    validatorHandler(updateFullNameUserSchema, 'body'),
     async (req, res, next) => {
         try {
             const { id } = req.params;
@@ -58,9 +63,9 @@ router.patch('/name/:id',
             next(error);
         }
     }
-);
+)
 
-router.patch('/private/:id',
+.patch('/private/:id',
     validatorHandler(getUserSchema, 'params'),
     validatorHandler(changePrivateSchema, 'body'),
     async (req, res, next) => {
@@ -73,13 +78,9 @@ router.patch('/private/:id',
             next(error);
         }
     }
-);
+)
 
-/*
-This operation should only be able for the super-admin role, 
-and should ask for password or somenthing
-*/
-router.delete('/:id',
+.delete('/:id',
     validatorHandler(getUserSchema, 'params'),
     async (req, res, next) => {
         try {
@@ -90,7 +91,7 @@ router.delete('/:id',
             next(error)
         }
     }
-);
+)
 
 
 module.exports = router;

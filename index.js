@@ -7,9 +7,10 @@ const app = express();
 const port = process.env.PORT || 3000
 
 app.use(express.json());
+require('./utils/auth');
 
 app.get('/', (req, res) => {
-    res.send('Api Running   ')
+    res.send('Api Running')
 })
 routerApi(app);
 

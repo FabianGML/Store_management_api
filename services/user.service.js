@@ -8,19 +8,34 @@ class UserService {
 
     constructor(){}
 
-    async find() {
+    async getAllUsers() {
         const rta = await models.User.findAll({
             order: sequelize.col('id')
         });
-        return rta;
+
+        const users = rta.map(user => {
+            delete user.dataValues.password
+            return user
+        })
+        console.log(users)
+        return users;
     }
 
-    async findOne(id) {
+    async getOneUser(id) {
         const user = await models.User.findByPk(id);
         if(!user){
             throw boom.notFound('No se encontro el usuario');
         }
+        delete user.dataValues.password
         return user;
+    }
+    
+    async getUserByEmail(email) {
+        const user = await models.User.findOne({where: { email }});
+        if (!user){
+            throw boom.unauthorized();
+        }
+        return user
     }
 
     async create(data) {
@@ -41,7 +56,7 @@ class UserService {
         return newUser
     }
 
-    async updateName(id, data) {
+    async updateFullName(id, data) {
         const user = await this.findOne(id);
         const rta = await user.update(data);
         delete rta.dataValues.password
