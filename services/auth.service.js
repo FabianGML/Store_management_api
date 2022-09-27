@@ -9,7 +9,7 @@ const service = new UserService();
 class AuthService {
     constructor(){}
 
-    async getUser(email, password ) {
+    async verifyUser(email, password ) {
         const user = await service.getUserByEmail(email);
         
         const isMatch = await bcrypt.compare(password, user.password);
@@ -17,7 +17,7 @@ class AuthService {
             throw boom.unauthorized();
         }
         delete user.dataValues.password;
-        // delete user.dataValues.recoveryToken;
+        delete user.dataValues.recoverToken;
         return user
     }
 

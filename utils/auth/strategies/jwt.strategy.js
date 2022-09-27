@@ -8,7 +8,7 @@ const options = {
 }
 
 const JwtStrategy = new Strategy(options, (payload, done) => {
-    return (null, payload)
+    return done(null, payload)
 })
 
 module.exports = JwtStrategy

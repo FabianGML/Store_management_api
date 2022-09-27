@@ -20,7 +20,6 @@ const getSaleSchema = Joi.object({
 /* Sales-product schema */
 
 const createSaleSchema = Joi.object({
-    userId,
     items
 });
 

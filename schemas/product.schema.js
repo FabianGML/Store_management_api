@@ -12,9 +12,7 @@ const expiration = Joi.date().format('DD-MM-YYYY').utc();
 const expiration2 = Joi.date().format('DD-MM-YYYY').utc();
 const userId = Joi.number().positive();
 
-
-
-const createProductSchema = Joi.object({
+const products = Joi.array().items(Joi.object({
     name: name.required(),
     price: price.required(),
     stock: stock.required(),
@@ -25,6 +23,12 @@ const createProductSchema = Joi.object({
     expiration,
     expiration2,
     userId: userId.required(),
+}))
+
+
+
+const createProductSchema = Joi.object({
+    products
 });
 
 const getProductSchema = Joi.object({

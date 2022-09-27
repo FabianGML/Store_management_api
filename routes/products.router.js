@@ -1,13 +1,17 @@
 const express = require('express');
+const passport = require('passport');
 
 const validatorHandler = require('./../middlewares/validator.handler');
 const ProductService = require('./../services/product.service');
 const { createProductSchema, getProductSchema,  updateProductSchema } = require('./../schemas/product.schema');
+const { checkRoles } = require('./../middlewares/auth.handler');
 
 const router = express.Router();
 const service = new ProductService();
 
+/* Get all the products and the laboratory it belongs to  */
 router.get('/',
+    checkRoles('seller'),
     async (req, res, next ) => {
         try {
             const products = await service.getAllProducts()
@@ -18,7 +22,9 @@ router.get('/',
     }
 )
 
+/* Get one product and all its info */
 .get('/:id', 
+    checkRoles('seller'),
     validatorHandler(getProductSchema, 'params'),
     async (req, res, next) => {
         try {
@@ -33,7 +39,21 @@ router.get('/',
     }
 )
 
+/* Create a new product can be a single product or a bulk of it 
+-name (required)
+-price (required)
+-stock (required)
+-line (required)
+-ingredients (required)
+-labId (required)
+-description
+-expiration
+-expiration2
+-userId (required)
+
+*/
 .post('/', 
+    checkRoles(),
     validatorHandler(createProductSchema, 'body'),  
     async (req, res, next) => {
         try {
@@ -46,7 +66,20 @@ router.get('/',
     }
 )
 
+/* Update one product  
+-name
+-price
+-stock
+-line
+-ingredients
+-labId
+-description
+-expiration
+-expiration2
+*/
 .patch('/:id', 
+    checkRoles(),
+    passport.authenticate('local', {session: false}),
     validatorHandler(getProductSchema, 'params'),
     validatorHandler(updateProductSchema, 'body'),
     async (req, res, next) => {
@@ -63,7 +96,10 @@ router.get('/',
     }
 )
 
+/*  Delete one product */
 .delete('/:id', 
+    passport.authenticate('local', {session: false}),
+    checkRoles(),
     validatorHandler(getProductSchema, 'params'),
     async(req, res, next) => {
         try {

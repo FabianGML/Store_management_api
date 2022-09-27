@@ -18,10 +18,10 @@ class SaleService {
         return sale
     }
 
-    async createSale(data) {
+    async createSale(data, userId) {
         const sale = await models.Sale.create({
             total: 0.1,
-            userId: data.userId
+            userId
         })
         const prices = []
         const items = []

@@ -2,6 +2,9 @@ const boom = require('@hapi/boom');
 const { Op } = require('sequelize')
 
 const { models } = require('./../libs/sequelize');
+const ProductService = require('./product.service');
+
+const productService = new ProductService();
 
 class ProviderService {
     constructor(){}
@@ -100,19 +103,6 @@ class ProviderService {
         }
         return labProv
     }
-    
-    async updateLab(providerId, labProvId, data) {
-        const provider = await this.getOneProvider(providerId);
-        const labProv = await this.getOneLabProv(labProvId);
-
-        const lab = await this.labExist(data.labs, providerId);
-        await labProv.update({
-            labId: lab[0].labId
-        })
-        return {
-            message: 'Laboratorio actualizado con exito'
-        }
-    }
 
     async deleteLab(providerId, labProvId) {
         const provider = await this.getOneProvider(providerId);
@@ -174,13 +164,13 @@ class ProviderService {
     }
 
     async addProdProv(providerId, data) {
-        const provider = await providerService.getOneProvider(providerId);
+        const provider = await this.getOneProvider(providerId);
         const products = []
 
         for (const productProv of data.productsProv){
             /* Making sure the product actually exist in the DB */
-            const product = await this.getOneProduct(productProv.productId);
-            /* If the product does exist then we push it into an array, if it's not, we discard it */
+            const product = await productService.getOneProduct(productProv.productId);
+            /* If the product does exist then we push it into the array, if it's not, we discard it */
             if (product)  {
                 products.push(productProv)
             }
@@ -193,7 +183,7 @@ class ProviderService {
     }
 
     async updateProdProv(providerId, prodProvId, data) {
-        await providerService.getOneProvider(providerId);
+        await this.getOneProvider(providerId);
         const prodProv = await this.getOneProdProv(prodProvId)
         await prodProv.update({
             productId: data.productId
@@ -203,10 +193,8 @@ class ProviderService {
         }
 
     }
-    async deleteProdProv(providerId, prodProvId) {
-        await providerService.getOneProvider(providerId);   
+    async deleteProdProv(prodProvId) {
         const prodProv = await this.getOneProdProv(prodProvId);
-        console.log(prodProv)
         await prodProv.destroy();
         return {
             message: 'Producto eliminado correctamente'

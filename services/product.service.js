@@ -3,9 +3,6 @@ const boom = require('@hapi/boom');
 
 const { models } = require('./../libs/sequelize');
 
-const ProviderService = require('./provider.service');
-const providerService = new ProviderService();
-
 class ProductService {
 
     constructor() {}
@@ -15,6 +12,7 @@ class ProductService {
             include: ['lab'],
             order: ['name']
         })
+        delete products.ingredients
         return products
     }
 

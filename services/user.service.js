@@ -4,6 +4,7 @@ const sequelize = require('sequelize');
 
 const { models } = require('./../libs/sequelize');
 
+
 class UserService {
 
     constructor(){}
@@ -21,13 +22,23 @@ class UserService {
         return users;
     }
 
+    /* The function return only the user data */
     async getOneUser(id) {
         const user = await models.User.findByPk(id);
         if(!user){
             throw boom.notFound('No se encontro el usuario');
         }
+    }
+
+    /* Returns the current user and it's sales  */
+    async getOneProfile(id) {
+        const user = await this.getOneUser(id);
+        const sales = await models.Sale.findAll({where: {userId: id}})
         delete user.dataValues.password
-        return user;
+        return {
+            user,
+            sales
+        };
     }
     
     async getUserByEmail(email) {
@@ -57,7 +68,7 @@ class UserService {
     }
 
     async updateFullName(id, data) {
-        const user = await this.findOne(id);
+        const user = await this.getOneUser(id);
         const rta = await user.update(data);
         delete rta.dataValues.password
         delete rta.dataValues.email
@@ -66,13 +77,13 @@ class UserService {
     }
 
     async updatePrivate(id, changes) {
-        const user = await this.findOne(id);
+        const user = await this.getOneUser(id);
         const password = changes.password;
         const isMatch = await bcrypt.compare(password, user.password);
         const rta = {}
         const newPassword = changes.newPassword;
         if (!isMatch) {
-            throw boom.unauthorized();
+            throw boom.unauthorized('Por favor, Ingresa la contraseña correcta');
         }
         if(newPassword) {
             
